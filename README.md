@@ -15,6 +15,7 @@ install.sh <-d|--debug> <-c|--config>
 - `<-c|--config>`: Can be `Debug` or `Release`
 - `<-e|--external-dir>`: Specify the external directory where the 3rdPartyLibs will be installed
 - `<-d|--debug>`: Short-hand for setting the configuration (`-c|--config`) to 'Debug'
+- `<-j|--parallel>`: Specify number of threads for build to use
 
 
 ## Functions
