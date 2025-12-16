@@ -46,3 +46,47 @@ MACRO (PREPARE_EXTERNAL_LIBRARY PACKAGE_NAME GITHUB_URL GITHUB_BRANCH PACKAGE_DE
 
 ENDMACRO()
 
+MACRO (PREPARE_HEADER_ONLY PACKAGE_NAME GITHUB_URL GITHUB_BRANCH)
+
+    CMAKE_PARSE_ARGUMENTS(INCUDE_EXTERNAL_CMAKE
+        ""
+        ""
+        ""
+        ${ARGN}
+    )
+
+    ExternalProject_Add(${PACKAGE_NAME}
+            GIT_REPOSITORY ${GITHUB_URL}
+            GIT_TAG ${GITHUB_BRANCH}
+            CONFIGURE_COMMAND "" # no configure step
+            BUILD_COMMAND "" # no build step
+            INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory
+                <SOURCE_DIR>/include
+                ${PACKAGE_INSTALL_DIR}/include/${PACKAGE_NAME}
+    )
+
+    # Create an INTERFACE target
+    set(PACKAGE_NAME_LIB ${PACKAGE_NAME}_lib)
+    add_library(${PACKAGE_NAME_LIB} INTERFACE)
+
+    # Point to the downloaded source
+    ExternalProject_Get_Property(${PACKAGE_NAME} source_dir)
+
+    set(PACKAGE_INSTALL_DIR "${EXTERNAL_DIRECTORY}/install/${CMAKE_BUILD_TYPE}")
+
+    target_include_directories(${PACKAGE_NAME_LIB} INTERFACE
+            $<BUILD_INTERFACE:${source_dir}/include>
+            $<INSTALL_INTERFACE:${PACKAGE_INSTALL_DIR}>
+    )
+
+    # Install headers
+    install(DIRECTORY ${source_dir}/include/ DESTINATION ${PACKAGE_INSTALL_DIR}/include/${PACKAGE_NAME})
+
+    IF (IS_DIRECTORY "${PACKAGE_INSTALL_DIR}")
+#       MESSAGE(STATUS "Found ${PACKAGE_INSTALL_DIR}")
+       set(CMAKE_PREFIX_PATH ${PACKAGE_INSTALL_DIR})
+#       list(PREPEND CMAKE_PREFIX_PATH ${PACKAGE_INSTALL_DIR})
+    ENDIF()
+
+ENDMACRO()
+
