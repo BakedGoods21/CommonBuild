@@ -10,6 +10,7 @@ prepare_external_library(argparser git@github.com:p-ranav/argparse.git v3.2 "" F
 prepare_external_library(GTest git@github.com:google/googletest.git v1.17.0 "" FALSE) 
 prepare_external_library(nlohmann git@github.com:nlohmann/json.git v3.12.0 "" FALSE) 
 prepare_external_library(spdlog git@github.com:gabime/spdlog.git v1.16.0 "" FALSE) 
+prepare_header_only(thread-pool git@github.com:bshoshany/thread-pool.git v5.0.0)
 #prepare_external_library(SPIRV-Headers git@github.com:KhronosGroup/SPIRV-Headers.git vulkan-sdk-1.3.290 "" FALSE) 
 #prepare_external_library(SPIRV-Tools git@github.com:KhronosGroup/SPIRV-Tools.git vulkan-sdk-1.3.290 "-DSPIRV-Headers_SOURCE_DIR=${EXTERNAL_DIR}/packages/SPIRV-Headers/src/SPIRV-Headers" FALSE)
 #prepare_external_library(glslang git@github.com:KhronosGroup/glslang.git 14.3.0 "-DALLOW_EXTERNAL_SPIRV_TOOLS=True" FALSE)
