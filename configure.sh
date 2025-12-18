@@ -3,19 +3,19 @@
 ROOT_DIR=.
 BUILD_FOLDER=$ROOT_DIR/build
 INSTALL_FOLDER=$BUILD_FOLDER/install
+EXTERNAL_DIRECTORY=${BUILD_FOLDER}/3rdPartyLibs
 
 VERBOSE=FALSE
 MY_CONFIG=Release
-EXTERNAL_CMAKE_FILE="Externals.cmake"
+CUSTOM_PREFIX=
+ADDITIONAL_FLAGS=$()
 while [[ $# -gt 0 ]]; do
     key=$1
-    echo "key $key"
-    echo "\$\# $#"
     case $key in
-	-v|--verbose)
-	shift # Consume Argument
-	VERBOSE=TRUE
-	;;
+        -v|--verbose)
+        shift # Consume Argument
+        VERBOSE=TRUE
+        ;;
         -e|--external-dir)
         shift # Consome Argument
         EXTERNAL_DIRECTORY="$1"
@@ -36,19 +36,15 @@ while [[ $# -gt 0 ]]; do
         MY_CONFIG=Debug
         ;;
         *)
+        ADDITIONAL_FLAGS+=("$1")
+        shift # Consume Argument
         break;
         ;;
     esac
 done
 
-if [ -z ${EXTERNAL_DIRECTORY} ]; then
-    echo "'EXTERNAL_DIRECTORY' environment variable or commandline argument not found!"
-    echo "Defaulting to './build'..."
-    export EXTERNAL_DIRECTORY=./3rdPartyLibs
-fi
-
 echo "EXTERNAL_DIRECTORY: ${EXTERNAL_DIRECTORY}"
 echo "EXTERNAL_CMAKE_FILE: ${EXTERNAL_CMAKE_FILE}"
-echo "cmake -S $ROOT_DIR -B $BUILD_FOLDER -DCMAKE_BUILD_TYPE=$MY_CONFIG -DEXTERNAL_DIRECTORY=$EXTERNAL_DIRECTORY -DGIT_VERBOSITY=$VERBOSE -DCMAKE_INSTALL_PREFIX=${INSTALL_FOLDER} $@"
-cmake -S $ROOT_DIR -B $BUILD_FOLDER -DCMAKE_BUILD_TYPE=$MY_CONFIG -DEXTERNAL_DIRECTORY=$EXTERNAL_DIRECTORY -DEXTERNAL_CMAKE_FILE=$EXTERNAL_CMAKE_FILE -DGIT_VERBOSITY=$VERBOSE -DCMAKE_INSTALL_PREFIX=${INSTALL_FOLDER} $@
+
+(set -x; cmake -S $ROOT_DIR -B $BUILD_FOLDER -DCMAKE_BUILD_TYPE=$MY_CONFIG -DEXTERNAL_DIRECTORY=$EXTERNAL_DIRECTORY -DEXTERNAL_CMAKE_FILE=$EXTERNAL_CMAKE_FILE -DGIT_VERBOSITY=$VERBOSE -DCMAKE_INSTALL_PREFIX=${INSTALL_FOLDER} ${ADDITIONAL_FLAGS[@]})
 

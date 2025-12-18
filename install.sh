@@ -5,8 +5,8 @@ BUILD_FOLDER=$ROOT_DIR/build
 INSTALL_FOLDER=$BUILD_FOLDER/install
 
 CONFIG=Release
-if [[ $# -gt 0 ]]
-then
+ADDITIONAL_FLAGS=$()
+while [[ $# -gt 0 ]]; do
     key=$1
     case $key in
         -d|--debug)
@@ -18,10 +18,16 @@ then
         CONFIG="$1"
         shift # Consume Argument
         ;;
+        *)
+        ADDITIONAL_FLAGS+=("$1")
+        shift # Consume Argument
+        break;
+        ;;
     esac
-fi
+done
 
 mkdir -p $BUILD_FOLDER
 mkdir -p $INSTALL_FOLDER
-cmake --install $BUILD_FOLDER --config $CONFIG --prefix $INSTALL_FOLDER $@
+
+(set -x; cmake --install $BUILD_FOLDER --config $CONFIG --prefix $INSTALL_FOLDER ${ADDITIONAL_FLAGS[@]})
 

@@ -5,6 +5,7 @@ BUILD_FOLDER=$ROOT_DIR/build
 
 BUILD_JOBS=1
 MY_CONFIG=Release
+ADDITIONAL_FLAGS=$()
 if [[ $# -gt 0 ]]
 then
     key=$1
@@ -23,9 +24,15 @@ then
         shift # Consume Argument
         MY_CONFIG=Debug
         ;;
+        *)
+        ADDITIONAL_FLAGS+=("$1")
+        shift # Consume Argument
+        break;
+        ;;
     esac
 fi
 
 mkdir -p $BUILD_FOLDER
-cmake --build $BUILD_FOLDER --config $MY_CONFIG --parallel $BUILD_JOBS $@
+
+(set -x; cmake --build $BUILD_FOLDER --config $MY_CONFIG --parallel $BUILD_JOBS ${ADDITIONAL_FLAGS[@]})
 
