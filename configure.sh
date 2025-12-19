@@ -3,10 +3,10 @@
 ROOT_DIR=.
 BUILD_FOLDER=$ROOT_DIR/build
 INSTALL_FOLDER=$BUILD_FOLDER/install
-EXTERNAL_DIRECTORY=${BUILD_FOLDER}/3rdPartyLibs
 
 VERBOSE=FALSE
 MY_CONFIG=Release
+EXTERNAL_CMAKE_FILE="Externals.cmake"
 CUSTOM_PREFIX=
 ADDITIONAL_FLAGS=$()
 while [[ $# -gt 0 ]]; do
@@ -38,10 +38,13 @@ while [[ $# -gt 0 ]]; do
         *)
         ADDITIONAL_FLAGS+=("$1")
         shift # Consume Argument
-        break;
         ;;
     esac
 done
+
+if [ -z ${EXTERNAL_DIRECTORY} ]; then
+    export EXTERNAL_DIRECTORY=${BUILD_FOLDER}/3rdPartyLibs
+fi
 
 echo "EXTERNAL_DIRECTORY: ${EXTERNAL_DIRECTORY}"
 echo "EXTERNAL_CMAKE_FILE: ${EXTERNAL_CMAKE_FILE}"

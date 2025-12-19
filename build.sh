@@ -6,9 +6,9 @@ BUILD_FOLDER=$ROOT_DIR/build
 BUILD_JOBS=1
 MY_CONFIG=Release
 ADDITIONAL_FLAGS=$()
-if [[ $# -gt 0 ]]
-then
+while [[ $# -gt 0 ]]; do
     key=$1
+    echo "key $key:$#"
     case $key in
         -j|--parallel)
         shift # Consume Argument
@@ -27,10 +27,9 @@ then
         *)
         ADDITIONAL_FLAGS+=("$1")
         shift # Consume Argument
-        break;
         ;;
     esac
-fi
+done
 
 mkdir -p $BUILD_FOLDER
 
