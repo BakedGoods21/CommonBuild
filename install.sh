@@ -5,7 +5,7 @@ BUILD_FOLDER=$ROOT_DIR/build
 INSTALL_FOLDER=$BUILD_FOLDER/install
 
 CONFIG=Release
-ADDITIONAL_FLAGS=$()
+ADDITIONAL_FLAGS=()
 while [[ $# -gt 0 ]]; do
     key=$1
     case $key in
@@ -21,7 +21,6 @@ while [[ $# -gt 0 ]]; do
         *)
         ADDITIONAL_FLAGS+=("$1")
         shift # Consume Argument
-        break;
         ;;
     esac
 done

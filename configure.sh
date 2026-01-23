@@ -8,36 +8,35 @@ VERBOSE=FALSE
 MY_CONFIG=Release
 EXTERNAL_CMAKE_FILE="Externals.cmake"
 CUSTOM_PREFIX=
-ADDITIONAL_FLAGS=$()
+ADDITIONAL_FLAGS=()
 while [[ $# -gt 0 ]]; do
-    key=$1
-    case $key in
+    case $1 in
         -v|--verbose)
-        shift # Consume Argument
-        VERBOSE=TRUE
+            shift # Consume Argument
+            VERBOSE=TRUE
         ;;
         -e|--external-dir)
-        shift # Consome Argument
-        EXTERNAL_DIRECTORY="$1"
-        shift # Consome Argument
+            shift # Consome Argument
+            EXTERNAL_DIRECTORY="$1"
+            shift # Consome Argument
         ;;
         -f|--external-cmake-file)
-        shift # Consome Argument
-        EXTERNAL_CMAKE_FILE="$1"
-        shift # Consome Argument
+            shift # Consome Argument
+            EXTERNAL_CMAKE_FILE="$1"
+            shift # Consome Argument
         ;;
         -c|--config)
-        shift # Consume Argument
-        MY_CONFIG="$1"
-        shift # Consume Argument
+            shift # Consume Argument
+            MY_CONFIG="$1"
+            shift # Consume Argument
         ;;
         -d|--debug)
-        shift # Consume Argument
-        MY_CONFIG=Debug
+            shift # Consume Argument
+            MY_CONFIG=Debug
         ;;
         *)
-        ADDITIONAL_FLAGS+=("$1")
-        shift # Consume Argument
+            ADDITIONAL_FLAGS+=("$1")
+            shift # Consume Argument
         ;;
     esac
 done
