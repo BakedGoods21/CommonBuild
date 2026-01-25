@@ -37,3 +37,16 @@ ExternalProject_Add_StepDependencies(<library_name> <dependent_stage> <dependenc
 - `<dependent_stage>`: This is the stage the dependency needs to finish before `<library_name>` can start
 - `<dependency>` The library that is the dependency
 
+## Additional
+The folder `CMakeHelpers` is a directory for various useful CMake macros to make various CMake tasks just a bit easier
+
+- `GetExternaLibs.cmake` has macro `InstallExternalLib(<external_lib> <external_lib_target>)` for installing 3rd party library's shared objects (or dynamic-link library for windows) according to the specified targets.
+```
+InstallExternalLib(LibDataChannel LibDataChannel::LibDataChannel) # Will install datachannel.dll
+InstallExternalLib(OpenCV opencv_highgui)                         # Will install opencv_highgui.dll
+InstallExternalLib(OpenCV opencv_videoio)                         # Will install opencv_videoio.dll
+InstallExternalLib(OpenCV opencv_imgcodecs)                       # Will install opencv_imgcodecs.dll
+InstallExternalLib(OpenCV opencv_imgproc)                         # Will install opencv_imgproc.dll
+InstallExternalLib(OpenCV opencv_core)                            # Will install opencv_core.dll
+```
+
