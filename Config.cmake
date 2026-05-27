@@ -72,8 +72,8 @@ MACRO (PREPARE_HEADER_ONLY PACKAGE_NAME GITHUB_URL GITHUB_BRANCH PATH_TO_COPY IN
                 BUILD_COMMAND "" # no build step
                 INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory
                     <SOURCE_DIR>/${PATH_TO_COPY}
-                    ${PACKAGE_INSTALL_DIR}/include/${PACKAGE_NAME}
-                COMMENT "${PACKAGE_NAME} installed to ${PACKAGE_INSTALL_DIR}/include/${PACKAGE_NAME}"
+                    ${PACKAGE_INSTALL_DIR}/include/
+                COMMENT "${PACKAGE_NAME} installed to ${PACKAGE_INSTALL_DIR}/include/"
         )
     ELSE()
         ExternalProject_Add(${PACKAGE_NAME}
@@ -83,8 +83,8 @@ MACRO (PREPARE_HEADER_ONLY PACKAGE_NAME GITHUB_URL GITHUB_BRANCH PATH_TO_COPY IN
                 BUILD_COMMAND "" # no build step
                 INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_if_different
                     <SOURCE_DIR>/${PATH_TO_COPY}
-                    ${PACKAGE_INSTALL_DIR}/include/${PACKAGE_NAME}
-                COMMENT "${PATH_TO_COPY} installed to ${PACKAGE_INSTALL_DIR}/include/${PACKAGE_NAME}"
+                    ${PACKAGE_INSTALL_DIR}/include/
+                COMMENT "${PATH_TO_COPY} installed to ${PACKAGE_INSTALL_DIR}/include/"
         )
     ENDIF()
 
