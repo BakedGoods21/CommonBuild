@@ -27,6 +27,7 @@ MACRO (PREPARE_EXTERNAL_LIBRARY PACKAGE_NAME GITHUB_URL GITHUB_BRANCH PACKAGE_DE
 #    set(PACKAGE_INSTALL_DIR "${EXTERNAL_DIRECTORY}/install/${PACKAGE_NAME}")
     set(PACKAGE_INSTALL_DIR "${EXTERNAL_DIRECTORY}/install/${CMAKE_BUILD_TYPE}/${INSTALL_SUBDIRECTORY}")
 
+    message(STATUS "PACKAGE_INSTALL_DIR: ${PACKAGE_INSTALL_DIR}")
     string(REPLACE " " ";" MY_ARGS_LIST "${PACKAGE_DEFINES}")
 
     ExternalProject_Add(${PACKAGE_NAME}
@@ -48,24 +49,44 @@ MACRO (PREPARE_EXTERNAL_LIBRARY PACKAGE_NAME GITHUB_URL GITHUB_BRANCH PACKAGE_DE
 
 ENDMACRO()
 
-MACRO (PREPARE_HEADER_ONLY PACKAGE_NAME GITHUB_URL GITHUB_BRANCH)
+MACRO (PREPARE_HEADER_ONLY PACKAGE_NAME GITHUB_URL GITHUB_BRANCH PATH_TO_COPY INSTALL_SUBDIRECTORY)
 
-    CMAKE_PARSE_ARGUMENTS(PREPARE_EXTERNAL_LIBRARY
+    CMAKE_PARSE_ARGUMENTS(PREPARE_HEADER_ONLY
         ""
         ""
         ""
         ${ARGN}
     )
 
-    ExternalProject_Add(${PACKAGE_NAME}
-            GIT_REPOSITORY ${GITHUB_URL}
-            GIT_TAG ${GITHUB_BRANCH}
-            CONFIGURE_COMMAND "" # no configure step
-            BUILD_COMMAND "" # no build step
-            INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory
-                <SOURCE_DIR>/include
-                ${PACKAGE_INSTALL_DIR}/include/${PACKAGE_NAME}
-    )
+    IF ("${PATH_TO_COPY}" STREQUAL "")
+        set(PATH_TO_COPY include)
+    ENDIF()
+
+    set(PACKAGE_INSTALL_DIR "${EXTERNAL_DIRECTORY}/install/${CMAKE_BUILD_TYPE}/${INSTALL_SUBDIRECTORY}")
+
+    IF (IS_DIRECTORY ${PATH_TO_COPY})
+        ExternalProject_Add(${PACKAGE_NAME}
+                GIT_REPOSITORY ${GITHUB_URL}
+                GIT_TAG ${GITHUB_BRANCH}
+                CONFIGURE_COMMAND "" # no configure step
+                BUILD_COMMAND "" # no build step
+                INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_directory
+                    <SOURCE_DIR>/${PATH_TO_COPY}
+                    ${PACKAGE_INSTALL_DIR}/include/${PACKAGE_NAME}
+                COMMENT "${PACKAGE_NAME} installed to ${PACKAGE_INSTALL_DIR}/include/${PACKAGE_NAME}"
+        )
+    ELSE()
+        ExternalProject_Add(${PACKAGE_NAME}
+                GIT_REPOSITORY ${GITHUB_URL}
+                GIT_TAG ${GITHUB_BRANCH}
+                CONFIGURE_COMMAND "" # no configure step
+                BUILD_COMMAND "" # no build step
+                INSTALL_COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                    <SOURCE_DIR>/${PATH_TO_COPY}
+                    ${PACKAGE_INSTALL_DIR}/include/${PACKAGE_NAME}
+                COMMENT "${PATH_TO_COPY} installed to ${PACKAGE_INSTALL_DIR}/include/${PACKAGE_NAME}"
+        )
+    ENDIF()
 
     # Create an INTERFACE target
     set(PACKAGE_NAME_LIB ${PACKAGE_NAME}_lib)
